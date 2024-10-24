@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('Dockerhub')  // Updated to match your credentials ID
+        DOCKERHUB_CREDENTIALS = credentials('Dockerhub')  // Ensure this matches the exact ID from the credentials store
         IMAGE_NAME = "velmurugan1412/my-docker-image"      // Your Docker Hub image name
     }
 
@@ -10,7 +10,12 @@ pipeline {
         stage('Test Credentials') {
             steps {
                 script {
-                    echo "Using Docker Hub credentials ID: ${DOCKERHUB_CREDENTIALS}"  // Diagnostic step to confirm credentials
+                    echo "Checking Docker Hub credentials..."
+                    withCredentials([usernamePassword(credentialsId: 'Dockerhub', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+                        echo "Docker Hub Username: ${DOCKER_USER}"  // Should print your Docker Hub username (velmurugan1412)
+                        // Confirm the password variable (masked in logs)
+                        echo "Docker Hub Password is set: ****"
+                    }
                 }
             }
         }
@@ -45,6 +50,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        sh "docker login -u ${env.DOCKERHUB_CREDENTIALS_USR} -p ${env.DOCKERHUB_CREDENTIALS_PSW}"
                         docker.image("${IMAGE_NAME}:${env.BUILD_NUMBER}").push()
                     }
                 }
@@ -71,4 +77,3 @@ pipeline {
         }
     }
 }
-
