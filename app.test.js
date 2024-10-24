@@ -1,10 +1,10 @@
 const request = require('supertest');
-const { app, server } = require('./app');  // Import the app and server
+const { app, server } = require('./app');  // Import both app and server
 
 describe('Math API Tests', () => {
     
     afterAll(() => {
-        server.close();  // Close the server after tests
+        server.close();  // Close the server after the tests are done
     });
 
     test('POST /add - should return the correct sum', async () => {
@@ -22,6 +22,6 @@ describe('Math API Tests', () => {
             .send({ num1: 5, num2: 3 });
 
         expect(response.statusCode).toBe(200);
-        expect(response.body.result).toBe(2);  // 5 - 3 = 2
+        expect(response.body.result).toBe 2);  // 5 - 3 = 2
     });
 });

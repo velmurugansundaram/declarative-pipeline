@@ -22,4 +22,4 @@ const server = app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
 
-module.exports = { app, server }; // Export both the app and server
+module.exports = { app, server };  // Export the app and server
